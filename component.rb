@@ -3,6 +3,7 @@ class Component
     u
   end
 
+  # Overload to print additional information to `STDOUT`.
   def monitoring
     ""
   end
@@ -33,8 +34,12 @@ class PidController < Component
     self.d = (e - self.prev) / DT
     self.prev = e
 
-    self.kp * e + self.ki * self.i + self.kd + self.d
+    self.kp * e + self.ki * self.i + self.kd * self.d
   end
 end
 
+class AdvController < Component
+  def initialize(kp, ki, kd = 0, clamp = [-1e10, 1e10], smooth = 1)
 
+  end
+end
