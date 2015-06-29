@@ -114,20 +114,24 @@ class RecursiveFilter < Component
   end
 end
 
-def closed_loop(setpoint, controller, plant, tm = 5000, inverted = false,
-                actuator = Identity.new, return_filter = Identity.new)
-  z = 0
-  tm.times do |t|
-    r = setpoint(t)
-    e = r - z
+module Feedback
+  class << self
+    def closed_loop(setpoint, controller, plant, tm = 5000, inverted = false,
+                  actuator = Identity.new, return_filter = Identity.new)
+      z = 0
+      tm.times do |t|
+        r = setpoint.call(t)
+        e = r - z
 
-    e = -e if inverted
+        e = -e if inverted
 
-    u = controller.work(e)
-    v = actuator.work(u)
-    y = plant.work(v)
-    z = return_filter.work(y)
+        u = controller.work(e)
+        v = actuator.work(u)
+        y = plant.work(v)
+        z = return_filter.work(y)
 
-    puts "#{t},#{DT * t},#{r},#{e},#{u},#{v},#{y},#{z},#{plant.monitoring}"
+        puts "#{t},#{DT * t},#{r},#{e},#{u},#{v},#{y},#{z},#{plant.monitoring}"
+      end
+    end
   end
 end
