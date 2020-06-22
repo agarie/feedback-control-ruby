@@ -92,4 +92,4 @@ DT = 1
 plant = SmoothedCache.new(0, method(:demand), 100)
 controller = PIDController.new(100, 250)
 
-closed_loop(method(:setpoint), controller, plant, 10000)
+Feedback::closed_loop(method(:setpoint), controller, plant, 10000)
